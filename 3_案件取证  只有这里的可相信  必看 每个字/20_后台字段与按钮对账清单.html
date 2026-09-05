@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="GpMm1grHsTzrFUvKjgDcpH">
+<head data-page-node-id="Hiwi3sBa9EhX7xno7lh7Q6">
+<meta charset="UTF-8" data-page-node-id="BiT2IodflpEG0RykwJhph7">
+<title>20 · 后台字段与按钮对账清单（2026-09-05）</title>
+<style>
+  body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#F5F4F0;color:#1A1B1C;margin:0;padding:24px;}
+  h1{font-size:22px;margin:0 0 4px;} h2{font-size:17px;margin:28px 0 10px;border-left:4px solid #3B7A57;padding-left:10px;}
+  h3{font-size:14.5px;margin:18px 0 6px;}
+  .sub{color:#6B7280;font-size:12.5px;margin-bottom:16px;}
+  table{border-collapse:collapse;width:100%;background:#fff;font-size:12.5px;margin:8px 0 16px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+  th{background:#EDEBE4;text-align:left;padding:7px 9px;border:1px solid #DDDACF;font-weight:600;white-space:nowrap;}
+  td{padding:6px 9px;border:1px solid #E7E4DA;vertical-align:top;}
+  .ok{color:#2E7D32;font-weight:600;} .warn{color:#B26A00;font-weight:600;} .bad{color:#C0392B;font-weight:600;}
+  .card{background:#fff;border:1px solid #E4E3DD;border-radius:10px;padding:14px 16px;margin:10px 0;}
+  .grid{display:flex;gap:10px;flex-wrap:wrap;}
+  .stat{flex:1 1 200px;border-radius:10px;padding:12px 14px;background:#fff;border:1px solid #E4E3DD;border-top:3px solid #999;}
+  .stat.g{border-top-color:#2E7D32;} .stat.y{border-top-color:#D9A400;} .stat.r{border-top-color:#C0392B;}
+  .stat b{font-size:20px;display:block;} .stat span{font-size:12px;color:#6B7280;}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:11.5px;}
+  .note{font-size:12px;color:#6B7280;margin:4px 0 10px;}
+</style>
+</head>
+<body data-page-node-id="BsCpN0TC4YVtCMBS9tZUxc">
+<h1 data-page-node-id="jjPdV4UnqfgDyPOb4vZv3P">20 · 后台字段与按钮对账清单</h1>
+<div class="sub" data-page-node-id="xLZsap0TtECQr4y95tcjgT">生成：2026-09-05 · 方法：两个审计 agent 逐页读代码（压实）+ 小阿星实测 HTTP + information_schema 实查 24 表 · 状态定义：✅ 真实落库｜🟡 有落点未接全/缺列｜❌ 假数据/静默丢失/死按钮</div>
+
+<div class="grid" data-page-node-id="kbrsnpYn27cODTX1sOE5jS">
+  <div class="stat g" data-page-node-id="fQwXD5mIB59YrWDlZwpG8w"><b data-page-node-id="CmRZCAdsncqbqJsQv1GiX3">10</b><span data-page-node-id="L3ZJo10E3C9g5xqRV33o7x">业务页全接真实接口（Election/*）</span></div>
+  <div class="stat g" data-page-node-id="oBlKvHlqJjK1WdeLUj8Jm2"><b data-page-node-id="LJU8EcwVsW9inaxHGYLodH">6</b><span data-page-node-id="72rXXCP40v8dCTbiaqJzHp">管理页真实（Admin×4 + User + Login）</span></div>
+  <div class="stat r" data-page-node-id="XPkBBCQiaIz3JiTFVj1BL7"><b data-page-node-id="fECJhqCoB8aaFs7OclSSnr">2</b><span data-page-node-id="fsf6xX10hLZ6bgOvKYCrnL">Dashboard 整页电商假数据（待处置）</span></div>
+  <div class="stat y" data-page-node-id="IH2h56hl8ISGSrIalFkFAd"><b data-page-node-id="ud1T8As0fRC2rLF3mH0T7j">5 组</b><span data-page-node-id="1N90F8dzMML9lmvSSkwCS0">编辑器字段后端静默丢弃（库无列）</span></div>
+</div>
+
+<h2 data-page-node-id="7QqrHyIIC51XzAu3rR9zOn">一、页面红绿灯总览</h2>
+<table data-page-node-id="YOcCVAjNMi1dro5SvLcnqA">
+<tr data-page-node-id="L1puvGLPGsERhR0TlV0Yln"><th data-page-node-id="uICXjW2njX7DuTAlbCGv5z">页面</th><th data-page-node-id="UkiJDnE7u1ScBydk9b6sqp">数据真实性</th><th data-page-node-id="myxJHAKt2QM8ggQw3adBSv">按钮真实性</th><th data-page-node-id="B9UdX38sk9MQPCvEqEAHDW">结论</th></tr>
+<tr data-page-node-id="kzNupqxnSBpp95zvskjvHQ"><td data-page-node-id="hrg47FOEJH3J4PY8ZO7wcb">Election/Home</td><td class="ok" data-page-node-id="xGFZF25t3hS64t3To99RR8">✅ 届次/公告/岗位全真</td><td class="warn" data-page-node-id="0Ae9eNGt83GxACL7vLdaRr">🟡 届次切换真，但阶段状态字面量与后端 not_started 不匹配</td><td data-page-node-id="RizTxepNlqYyK4jhMup8HQ">可用，修状态匹配</td></tr>
+<tr data-page-node-id="bBGuWYnKJwlvEwYIAh1QvM"><td data-page-node-id="hy4xXqVQ98h8LPUx82x8WS">Election/Activities</td><td class="ok" data-page-node-id="NdfsAbSUtxDkIkfwyPEth4">✅</td><td class="warn">🟡「＋新建选举活动」只弹提示无真实写入（UI 误导）</td><td data-page-node-id="TYtOBKoOGMgEDa0c1IHDUs">按钮改文案或接能力</td></tr>
+<tr data-page-node-id="BHt2PIIVsnilHMhDDic2lQ"><td data-page-node-id="HKfJb0FJ3rwVY9QsTnHplk">Election/ActivityDetail</td><td class="warn" data-page-node-id="rEINAnoAcHKUXY7dB9UXEr">🟡 岗位附件只写不显</td><td class="ok" data-page-node-id="fvaBLwKneLG5Bv6Jm9Hrso">✅ 发布/编辑真</td><td data-page-node-id="zHySUrBj4o3G2eQKOQ1opA">修附件回灌</td></tr>
+<tr data-page-node-id="n32bgYoYPwPEkliNCLGpAN"><td data-page-node-id="DFgaCVvK9lRyIKbASZ39sN">Election/Positions</td><td class="ok" data-page-node-id="ueOtEFEQu1jXSLySzhPkwi">✅</td><td data-page-node-id="p3NXrGHYXjFUvptXXFUB5M">纯展示无按钮</td><td data-page-node-id="OEzARnjYLcTgiZOkOccHBg">完好</td></tr>
+<tr data-page-node-id="MXDRbDWAiXCyRjIduWUUof"><td data-page-node-id="cEUZBF1DSRcbUZXtUZP1UG">Election/Proposals</td><td class="warn" data-page-node-id="JOECfnP85M7xlht5acJzKm">🟡 method/report 丢弃、写死「全民直选」</td><td class="ok" data-page-node-id="oDd6HsvCKAkmTSBrKYQkK6">✅ 创建/审批/附件真</td><td data-page-node-id="c2CPjClWSc7zH9L3pxzKZ9">小修</td></tr>
+<tr data-page-node-id="Fd9ygVSUQoLYjm7CDkA4OK"><td data-page-node-id="lAFiBFFERpgAbtYn9kuhx2">Election/Materials</td><td class="warn" data-page-node-id="ShPZHQ89W6ShiIt1fBSGId">🟡 类型写死「组织推荐」</td><td class="ok" data-page-node-id="n0V0vxpJOSro3Nhrg9Fifp">✅ 审核真</td><td data-page-node-id="6gAxkV5gl1YyTuSQw6kKii">小修</td></tr>
+<tr data-page-node-id="YVo3mn3YQ1mLLlqdtnmrMT"><td data-page-node-id="fypkWNcSBK3kHZCFujKhF9">Election/Candidates</td><td class="warn" data-page-node-id="Tt8ncj5LVzmMl8F3Rb7tEl">🟡 性别/年龄/来源列恒空（库无列）</td><td class="ok" data-page-node-id="iydro5amtXnH5NipzC9916">✅ 四轮审核/送审/下载真</td><td data-page-node-id="K7ct4KPtqnHdTlMkgwOllt">等 schema 决策</td></tr>
+<tr data-page-node-id="YZn6DQhmNnCHZu4F1vFX9p"><td data-page-node-id="0aZTAyopvAshgzEqeNEiUD">Election/Announcements（小编工作台）</td><td class="bad" data-page-node-id="0vCpzFNZC82RyjOnkJT66X">❌ 6 组编辑字段后端静默丢弃</td><td class="ok" data-page-node-id="jfrJChqMdxl3dACGRZxJ6J">✅ 发布/附件上传真</td><td data-page-node-id="CrSIHpLY4x74GAAYwFIqYn"><b data-page-node-id="zcGTIm1np1mqpwBK5zdrfD">最大缺口，需补列</b></td></tr>
+<tr data-page-node-id="rEOARGJTS4QVDCjVOGttDF"><td data-page-node-id="nCDEY5Zpbp4fUiZT5IYHF1">Election/Archives</td><td class="ok" data-page-node-id="nE9qwAPAdI31ePASzUxKcX">✅ 真聚合（当前空）</td><td class="ok" data-page-node-id="iMKzcD0ZXCA7x0LBPTdEzo">✅ 有 storageKey 可下载</td><td data-page-node-id="vhk8I0nRJVrEofYNY4tZHy">完好</td></tr>
+<tr data-page-node-id="mhGjC6RlvmIEaVRVDq5YBl"><td data-page-node-id="Mo6COXXDZoqWNpKsPPE3Ic">Election/QuickTemplates</td><td class="ok" data-page-node-id="CA0xq82WP6nsiYngAJMzQ8">🟡 静态本地模板副本（非后端 announcement_templates 表）</td><td class="ok" data-page-node-id="3om5s8BDQW0oA5fYJZ9RT6">✅</td><td data-page-node-id="v0fWCyfQWfcsGsQvNHroOR">第二真相风险：后台改模板不同步，建议改读后端</td></tr>
+<tr data-page-node-id="pERXjygQDS9NWdh0EE35Oq"><td data-page-node-id="i3C9LtcjpH8jsKmNQ18G4W">Admin/Notifications</td><td class="ok" data-page-node-id="5YLBDZOsAA0kDBMUzSNEX4">✅</td><td class="ok" data-page-node-id="4mgpRVjL8ZiFcHnWFSkgHP">✅ 增删改/测试全真</td><td data-page-node-id="mrMfT1FyiGHC150WuLt5dm">完好</td></tr>
+<tr data-page-node-id="BOz2mUsMVVTIBZH59V5sMK"><td data-page-node-id="cXGGNc27LXfubLG8mOZror">Admin/OrgSetup</td><td class="ok" data-page-node-id="AqM8sTtCvI5VT56f56FOq7">✅ 预设真落库</td><td class="bad" data-page-node-id="pV7Z7IPn1Ei9Sej3yjyptJ">❌ 权限判断 bug + 预设含 operator 旧角色</td><td data-page-node-id="lauN9MKKZYKvkBncQNZMmB">必修</td></tr>
+<tr data-page-node-id="CAamV4Qa2qQYWPxmOSGGRR"><td data-page-node-id="PwZ7gphFHuGmIm3PmvUOtt">Admin/Roles</td><td class="ok" data-page-node-id="hOtWxzDCo44P5JnMGc4eu2">✅</td><td class="warn" data-page-node-id="I5Ew5b1ZoMQz7VIaLdLZ0V">🟡 只读（增删改 API 已备无入口）</td><td data-page-node-id="EQDg1MzLUzR2B9Hpg2aZMl">设计决策</td></tr>
+<tr data-page-node-id="YZgagTKLscXm8VMEy5Lj4Z"><td data-page-node-id="VB9OPeTc7ry1LzIH6AUbN6">Admin/Users</td><td class="ok" data-page-node-id="PaO1pbokBg2lErx2B5CZK7">✅</td><td class="ok" data-page-node-id="u217OXhEcIE5ojcwrf6Lc5">✅ 启停/重置真</td><td data-page-node-id="CS86ffCJWTSCE8DU5wV50b">完好</td></tr>
+<tr data-page-node-id="741eXHH7ezqamGuMILCQj7"><td data-page-node-id="RTrHvKASFjvSxYOJfmZGnc">Dashboard/Base</td><td class="bad" data-page-node-id="Dpe36n8RGFpXG9Z4ggtYIP">❌ 100% 写死电商数据</td><td class="bad" data-page-node-id="6qOrqUBTijJ9fDHbstc0U8">❌ 死按钮</td><td data-page-node-id="rTJU7srSdiHLXFQDnGq4xu">建议下线/重做</td></tr>
+<tr data-page-node-id="sQ5H8sUguGvEwZJ4Oyfhmu"><td data-page-node-id="xl6MOfPlkJYtsxpU4Y3OYR">Dashboard/Detail</td><td class="bad" data-page-node-id="EJNJ0XddoKOLF5VlyFHrPC">❌ 100% 写死采购数据</td><td class="bad" data-page-node-id="POXb3g5ZiDGK7qFYMusoo0">❌ 空函数按钮</td><td data-page-node-id="x2u8L2LzsOi2HCbi3zVyOf">建议下线/重做</td></tr>
+<tr data-page-node-id="vygw0fU4uJcHGUEQz0iIXh"><td data-page-node-id="yLoNzv9FriiF1MztOjSIZo">User 个人中心</td><td class="ok" data-page-node-id="YQvxBQh2uA3TT3AXS2raTm">✅</td><td class="ok" data-page-node-id="YLdEBfQd41pyDl2tgWCMrb">✅ 改密真接口</td><td data-page-node-id="wBq7B65JULeWYtM3yMxyjn">完好</td></tr>
+<tr data-page-node-id="StYax2BKUAIK8Txf5HE6mR"><td data-page-node-id="7CACCC9BZnZfjmxvCfFfgk">Login</td><td class="ok" data-page-node-id="H0xDRZsDJO1QJWO29CHiMV">✅</td><td class="ok" data-page-node-id="4S7CUTAgTTcwPqv1qSXhHf">✅</td><td data-page-node-id="YSpQwrIoQWz5nXiKZKBFn7">完好（预填已清）</td></tr>
+</table>
+
+<h2 data-page-node-id="lc4BFTHqY9Z9oIgow643Kr">二、❌ 关键缺口详解</h2>
+
+<div class="card" data-page-node-id="h4oLffOj7pjYAgfhvAPR35">
+<h3 data-page-node-id="DI2vtrsG1InKzqzCBlavZ0">2.1 小编工作台 6 组字段静默蒸发（最高优先）</h3>
+<div class="note" data-page-node-id="ZG0oBsABEOkVLWFbF1XpxD">前端 updateAnnouncement 发全量 patch → 后端 <code data-page-node-id="Y499GmqdL5a2FtWb9aeTyv">PATCH /admin/announcements/:id</code> zod 只收 <code data-page-node-id="ExWkWr8xjLCCGJGrAA61Z5">title+body</code>（announcements.ts:16），多余键被 zod 静默剥离；库表也无对应列。用户编辑时看到值、刷新即丢 = 假字段。</div>
+<table data-page-node-id="0PCKYPufVvb3fm7qMPFGJk">
+<tr data-page-node-id="F7F8nLcMYTASECtAVotRs7"><th data-page-node-id="hmGJDtfdp6Pp9p6ZZdyWKT">前端字段</th><th data-page-node-id="T6HDc77lYgjK2Ti21CqUjo">现库 announcements 列</th><th data-page-node-id="1VGlU0w0yLTd6h23uC1Msf">判定</th></tr>
+<tr data-page-node-id="Gkl2lO9t6FD6IViUGINfly"><td data-page-node-id="5qsqtBxRlI2iSfrwGIyUr8">annSign 落款单位</td><td data-page-node-id="nnk3IClor9j9bb1shUknt1">无</td><td class="bad" data-page-node-id="E4ylw0sl8FOXby1SCF7OFy">❌ 需补列或删字段</td></tr>
+<tr data-page-node-id="p0DHvDJvxNTRAUMrgKp8d4"><td data-page-node-id="Xm4BRO8slR8q7YZnfLZZNn">annSignDate 成文日期</td><td data-page-node-id="HjBArc5Xws4F3mBLwtSYBQ">无</td><td class="bad" data-page-node-id="rUU0cQCNGr9uX4I4gHIcoX">❌ 同上</td></tr>
+<tr data-page-node-id="dlzSQix42WVNuj964EGfdf"><td data-page-node-id="kwpZFQw6oxMBCEO9PNtwAm">annOpenMaterialSubmit 材料提交开关</td><td data-page-node-id="6tfNIVHtIAsUtE8pJ8S3rY">无</td><td class="bad" data-page-node-id="EviNIxAdyvPbCw82ajMaQS">❌ 建议：改为按 positions.application_start/end 判定（不加列）</td></tr>
+<tr data-page-node-id="fWpCquyaAzdX3JhjaKVrK8"><td data-page-node-id="wjVQsBuxnzIHsvcvDEd87X">annPublishMode/annPublishAt 发布方式/定时</td><td data-page-node-id="KEvFOGgowW2FNnyOtFhE1c">仅 scheduled_for</td><td class="warn" data-page-node-id="fdilpltDENxfwnXlyAb2yI">🟡 定时可映射 scheduled_for；立即/定时模式需补列或简化</td></tr>
+<tr data-page-node-id="MA621u181cB6hqNCxkzCS4"><td data-page-node-id="6kg62Gcu7U5m3puD6VRHbr">annRemindHours/annRemindTo 提醒</td><td data-page-node-id="5jnoq1jSyXpOz9V2AxVGnI">无</td><td class="bad" data-page-node-id="GCP52bSSud3pbAu5Lt9fcq">❌ 需补列或删（webhook 已有提醒能力可合并）</td></tr>
+</table>
+</div>
+
+<div class="card" data-page-node-id="SztbJYExC5HTq3JiAw4Vj2">
+<h3 data-page-node-id="9jzu7MrIly0ca3N0QttDKF">2.2 Dashboard 两整页电商模板假数据（铁律 1 违规）</h3>
+<div class="note" data-page-node-id="exiDJluXsftJ8q3D93sJAh">Base：收入 ¥28,425/退款/订单 527 等写死；Detail：采购申请/SSL 证书列表写死；导出/管理/删除均为死按钮或空函数。与选举业务零关联。<b data-page-node-id="uGGX14japjZ8IpeBDsv10H">处置建议：从路由摘除，Dashboard 换成真实工作台（届次倒计时 + 待办：待审材料/待审候选人/待发公告，全部有真接口支撑）。</b></div>
+</div>
+
+<div class="card" data-page-node-id="r83kcGDk0Iljbdm7RB7F6Q">
+<h3 data-page-node-id="m4tPVUNySYrhhZrEStR3VG">2.3 写死值三处（半假数据）</h3>
+<table data-page-node-id="gyO9sAPFM7CWjBvQGEld6v">
+<tr data-page-node-id="TmgQtDSfB3cU2QsvEpqPj2"><th data-page-node-id="B2Ipi2cSvWj3maHGkQoG6u">位置</th><th data-page-node-id="kZqDLmpIFagmPwBcR0LJuz">写死内容</th><th data-page-node-id="f793M2pRrwf8PjcfHMcIL3">正确来源</th></tr>
+<tr data-page-node-id="OAYiOvAtaXFvZos1PQeHy6"><td data-page-node-id="ENDQKod4ABH6gUfOtsngR2">electionApi mapProposal</td><td data-page-node-id="p9bZRO7AIfdHaYdRYlClBo">选举方式恒「全民直选」</td><td data-page-node-id="J5WjFDmHpw1235X873p1rI">库无 method 列 → 补 election_proposals.method 或删展示</td></tr>
+<tr data-page-node-id="kJe5RN8f3KT5CMNjBDri3r"><td data-page-node-id="wbBMZopQaQGG85I1y5dWM2">electionApi mapProposal</td><td data-page-node-id="zBhCfNkb7RxYEVBE3DNNGk">提交人恒「村居经办人」</td><td data-page-node-id="8nMZLftnbLxjjsoFNJca63">库有 <code data-page-node-id="0JwJqVvLs0AgUVIkiF4PvB">proposed_by</code> 列，接口补返回即可（纯增量）</td></tr>
+<tr data-page-node-id="YQOB69XC8Iu3oAnkDBmXBM"><td data-page-node-id="44n6E30rBZN8LFWSW5phl3">electionApi mapMaterial</td><td data-page-node-id="ZVomyZCTVnNzlcqnIWFwLM">类型恒「组织推荐」</td><td data-page-node-id="0HjgeUMleG6GFcW3GwLIBV">materials 无 type 列；title 自带用途 → 建议删类型列或按 title 约定</td></tr>
+<tr><td>electionApi createProposal</td><td>岗位 requirement（资格条件）创建时不发送</td><td>positions jsonb 现成支持 requirement → 前端补传即可（纯增量）</td></tr>
+</table>
+</div>
+
+<div class="card" data-page-node-id="O69GfZMoY8Z0Nd7lb13tpb">
+<h3 data-page-node-id="Fq2TTKrgDjpugEMGLYUKCh">2.4 OrgSetup 权限判断 bug + operator 违规</h3>
+<div class="note" data-page-node-id="XVylHajNwv0AwqRW0lu5h2"><code data-page-node-id="9rbIAuzQPZapjYt68S5P8B">isAdmin = role==='admin' || roles==='platform_admin'</code>：真实 role 值是 platform_admin，<code data-page-node-id="4DEaOsGRsVGU5FrOaneBi1">'admin'</code> 永不成立，<code data-page-node-id="aRauaMHsNuwkHUldXi6GRS">roles</code> 字段在 LoginUser 上不存在恒 undefined —— 实际仅靠第二个条件的半截生效，碰巧能用但属侥幸。预设行 roleKey 含 <code data-page-node-id="qlkmq9vWP4ETefkTgzZlIE">'operator'</code>（AGENTS.md 铁律：无 operator），tsc 同报错。修法：isAdmin 改 <code data-page-node-id="WRqFwurKppU5UGS8FbnGFq">role==='platform_admin'</code>；预设集删 operator。</div>
+</div>
+
+<h2 data-page-node-id="V2HFon9sPZ2MWRbSUf67PL">三、🟡 前端修复清单（库和路由都有，前端没接全——无需动库）</h2>
+<table data-page-node-id="kzJk5bC1JNhdHPprajFkE7">
+<tr data-page-node-id="smjYDNGZu5xuSLCmA5kgCl"><th data-page-node-id="D6qmcFGOFcoaTWFBdYUG65">#</th><th data-page-node-id="6VEyTpkQxsTIyjmMOBy00G">项</th><th data-page-node-id="emJXj7VEDoqOaTImyOsQaq">修法</th></tr>
+<tr data-page-node-id="VDmvFuuA76sWydGMwnjxDB"><td data-page-node-id="Ba1UJ8KO03AIvaXS9nBEJx">1</td><td data-page-node-id="VOswHoHjjkFPSZPEtMMqWg">阶段状态不匹配：后端返回 <code data-page-node-id="ToLlVrRTgN6lGxjLVIpDTP">not_started</code>（E2E 实测），Home/ActivityDetail 按中文字面量「未开始/已完成」匹配 → 三色状态全灰</td><td data-page-node-id="8iWCpHEZxYOsAg0vsSnTcx">mergeStages 加状态归一映射（小程序 map.js 已有同款 STAGE_STATUS_CN，照搬）</td></tr>
+<tr data-page-node-id="HEnLeU20ROFTWnXXJCgUxL"><td data-page-node-id="7B0XqomKi9ryzxaxTpNtcp">2</td><td data-page-node-id="UnCsnuaWWXDWRwZXtOlEZi">岗位附件「只写不显」：position_files 真落库，liveSync 不回灌</td><td data-page-node-id="DPQtGT1WGoR48i4kUcYxsU">getPositions 聚合岗位附件 → downloadFiles</td></tr>
+<tr data-page-node-id="HeCu0rgXbsslEU3lb0YTQH"><td data-page-node-id="jxXG0zDR94DrpBAOlhemJT">3</td><td data-page-node-id="2BMjwT15AmRvFKVh9MPBCG">Candidates 岗位列显示 UUID</td><td data-page-node-id="7YaiF1jHDjstLZ0CAtgtAb">接口 JOIN positions.name 或前端用 positions 表映射</td></tr>
+<tr data-page-node-id="l1ICiPoJYNniSveV2q4gOR"><td data-page-node-id="EgcsKhExGkofYgIv7A49e4">4</td><td data-page-node-id="3BCrojIyffFVWnQEY78e3O">Proposals 丢弃 method/report/requirement（创建时只传 name/quota）</td><td data-page-node-id="YK1L3GVJWcxHECip5VqDZc">等 schema 决策后一并接；requirement 在 positions jsonb 里现成支持</td></tr>
+<tr data-page-node-id="KmKe9oZ24h6HC4JYzi4DqH"><td data-page-node-id="HkMGQrnyS6vPO3bgHjAeRI">5</td><td data-page-node-id="ChFoYSYBbaX1NMF0SZYMuV">Roles 页只读</td><td data-page-node-id="VsAAI60MdAogMVnOXDtVZp">createRole/updateRole/deleteRole 已导出，加按钮即可（需夏夏定是否放开）</td></tr>
+</table>
+
+<h2 data-page-node-id="q5VKiKGvLC35eB9tjAFUV0">四、数据库侧缺口汇总（页面在用、库无列）</h2>
+<table data-page-node-id="I330dJsnrTWRsafgZzSvJM">
+<tr data-page-node-id="pCHfstMBWPG1KznaihtcEv"><th data-page-node-id="YqH3rNghWi2zdGyySIVJb0">表</th><th data-page-node-id="3VbSywLeGQvMQ0BAO48mlR">缺列</th><th data-page-node-id="tBSk4yqRFAN4U5mQ4brtH1">影响页</th><th data-page-node-id="HCC1L01CgmdHNX3xICug3z">建议</th></tr>
+<tr data-page-node-id="cmdR0EYwlrhxkZnompuWBR"><td data-page-node-id="pWnIrdlPZN4Czo09to9ULL">announcements</td><td data-page-node-id="02fCtXyQzi29pT5ghvO1F5">sign / sign_date / open_material_submit / publish_mode / remind_hours / remind_to</td><td data-page-node-id="hEfxYb2osA81KIsBRhYA27">Announcements 编辑器</td><td data-page-node-id="Z8syfEGsAqocx4DX7f3U7T">补 4 列（sign/sign_date/publish_mode/remind_*），材料开关改岗位窗口判定</td></tr>
+<tr data-page-node-id="ZCIG9n2PI6RLmtdyVtXY9O"><td data-page-node-id="Mo3F1Oz9btYgsmcmEaizYB">election_proposals</td><td data-page-node-id="Hay0O6w52K6Zt5tjH0RRbu">method / report</td><td data-page-node-id="mOooZrsHjpN23Duu0tS8Ie">Proposals</td><td data-page-node-id="rcUY1WjaABRBMLAH6ZLeYj">补 2 列或删对应表单字段（减法优先）</td></tr>
+<tr data-page-node-id="OuWgQHkX5LUU6xmGWBgcce"><td data-page-node-id="kNWuld0qhYr6d5DZnUj9wB">materials</td><td data-page-node-id="niqxEGgIQtw21hYmijOkVG">type</td><td data-page-node-id="XLtbxT915exGo7Fex0AlNL">Materials</td><td data-page-node-id="46PrMZGkuvBzap6QCxyV7J">不加列，删「类型」列展示（title 已表意）</td></tr>
+<tr data-page-node-id="1WuNKYqhGqXXGRQVk8KkAr"><td data-page-node-id="uSjaOPlVIrRoiQZEYHQXqH">stage_templates</td><td data-page-node-id="rfF5h6OzBC97QpzVLXQnov">sys_action</td><td data-page-node-id="x6HlGHKyrTDNU5DTQ22teK">ActivityDetail「系统动作」行</td><td data-page-node-id="0FGhvrHjBURaK2ptnQpKGB">删该展示行（减法）</td></tr>
+<tr data-page-node-id="63XECoWFyezSqRlnViDCm9"><td data-page-node-id="FNVyS3TtJJegsi9paWceQM">candidates</td><td data-page-node-id="Pm89EdWoEhG4zsOOChInaz">gender / age / source</td><td data-page-node-id="i90MebMLZP0ki7TJ9lK8pV">Candidates 列表</td><td data-page-node-id="sNe8tQmmbSWw72RctsHGRL">昨字段表 P0-1，需加列（等甲方口径）</td></tr>
+</table>
+
+<h2 data-page-node-id="pODj3uLJc5ixwe43LWM3Hr">五、本轮已顺手修复（对账过程中发现并已修）</h2>
+<table data-page-node-id="xmcVeHSRObn5kSPjjWvmSq">
+<tr data-page-node-id="mJlaFEjY5DwpaoLfeuyaG5"><th data-page-node-id="HDKlFZBGM5kvzeBMvPVF2c">项</th><th data-page-node-id="Df5YPP3Lv2xpECMwGABLNk">内容</th><th data-page-node-id="8lyvo4H5SPcxZOyWHiI0e6">验证</td></tr>
+<tr data-page-node-id="DLDlE0S4GgfAypEVNr5hZ5"><td data-page-node-id="30SJMgF2PtC8410hx8P0xX">后端 /candidate/positions 403</td><td data-page-node-id="P9IJQNNVmq1wrL17jg0wgt">requirePerm('candidate')（权限表无此点）→ roleGuard('candidate')，与其他 /candidate/* 对齐</td><td class="ok" data-page-node-id="CEsHUwXExATSPG7VvzsaUP">✅ 重启后实测 200，返回真实岗位</td></tr>
+<tr data-page-node-id="zYkBTKXMEGCDhvjOvFq5Jk"><td data-page-node-id="4oNFxDVYHa6gjWk9VKBQRK">web 假数据清零（A 块）</td><td data-page-node-id="1BMDnedcsLawpxmmfqVYPF">electionStore/noticeStore mock、登录预填、5 个死接口、演示文案、liveSync 兜底</td><td class="ok" data-page-node-id="ARDYSjl9RpfAD41kPwjFHM">✅ 详见足迹 2026-09-05</td></tr>
+<tr data-page-node-id="lYh23f7VZvI3HEFjJrIAGq"><td data-page-node-id="b9L3WHxcAd994rDgWCU2gO">服务启动</td><td data-page-node-id="HCimjL44aAMEuTOqLM8OVb">后端 3100（tsx 单次运行）+ web 3003（vite）均 HTTP 200；参选人 7 项端到端全过（含 403 越权防护）</td><td class="ok" data-page-node-id="6gPm2QtrnKfZ6Cyd1Qd5zp">✅ 实测</td></tr>
+</table>
+<div class="note" data-page-node-id="tSKYopMJyh3JE5rmNQGYOv">存量尾巴备忘：①web tsc 10 个类型错（operator/dayjs/Proposals/noticeStore/roleStore）②backend dist 路径 ESM 坏（dev 用 tsx 不受影响）③C 块脏数据待批：3 脏封地（乱码「??????-???」/「122」/「1」）+ 衍生公告/假附件/卡 R2 候选人——乱码封地已实证会出现在参选人端列表里。</div>
+</body>
+</html>

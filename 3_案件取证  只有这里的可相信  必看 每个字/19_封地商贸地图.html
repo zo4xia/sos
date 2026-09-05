@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>村居换届系统 · 封地商贸地图</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f4ef;color:#1a1b1c;padding:24px;line-height:1.6}
+h1{font-size:22px;font-weight:700;margin-bottom:6px}
+.sub{color:#6b7280;font-size:13px;margin-bottom:24px}
+.pipeline{background:#fff;border-radius:12px;padding:20px;margin-bottom:24px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.pipeline-title{font-size:15px;font-weight:700;margin-bottom:16px;color:#3b5998}
+.flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center}
+.flow-node{background:linear-gradient(135deg,#3b5998,#5b7bb8);color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;text-align:center;min-width:100px}
+.flow-node.alt{background:linear-gradient(135deg,#e67e22,#f39c12)}
+.flow-node.green{background:linear-gradient(135deg,#27ae60,#2ecc71)}
+.flow-node.purple{background:linear-gradient(135deg,#8e44ad,#9b59b6)}
+.flow-arrow{font-size:20px;color:#999;margin:0 4px;font-weight:700}
+.fiefs{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
+.fief{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.fief-header{padding:12px 16px;color:#fff;font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.fief-header .role{font-size:11px;font-weight:400;opacity:.9}
+.fief-body{padding:14px 16px}
+.fief-section{margin-bottom:12px}
+.fief-section-title{font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.tbl-chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-size:11px;padding:2px 8px;border-radius:4px;background:#f0efe9;color:#4b5563;font-family:Consolas,monospace}
+.chip.pk{background:#fde8e8;color:#c0392b}
+.trade{font-size:12px;color:#4b5563;padding:6px 0;border-bottom:1px dashed #e4e3dd}
+.trade:last-child{border-bottom:none}
+.trade .dir{font-weight:700;color:#3b5998}
+.trade .rev{color:#e67e22}
+.field-list{font-size:11px;color:#6b7280;font-family:Consolas,monospace;margin-top:4px}
+.footer{margin-top:24px;padding:16px;background:#fff;border-radius:8px;font-size:12px;color:#6b7280;border-left:4px solid #3b5998}
+</style>
+</head>
+<body>
+
+<h1>村居换届选举政务系统 · 封地商贸地图</h1>
+<div class="sub">22张表 → 5大封地 → 商贸线路（字段生产/消费流转）· 以本地PostgreSQL实际schema为准</div>
+
+<!-- 核心商贸线路 -->
+<div class="pipeline">
+<div class="pipeline-title">🔄 核心商贸线路（提案审批通过 → 全自动生成）</div>
+<div class="flow">
+<div class="flow-node">📝 提案<br><small>election_proposals</small></div>
+<div class="flow-arrow">→</div>
+<div class="flow-node alt">⚙️ Pipeline<br><small>D日倒排计算</small></div>
+<div class="flow-arrow">→</div>
+<div class="flow-node green">🗳️ 封地<br><small>election_fiefs</small></div>
+<div class="flow-arrow">→</div>
+<div class="flow-node green">📅 阶段<br><small>election_fief_stages</small></div>
+<div class="flow-arrow">→</div>
+<div class="flow-node green">👥 岗位<br><small>positions</small></div>
+<div class="flow-arrow">→</div>
+<div class="flow-node purple">📢 公告<br><small>announcements</small></div>
+</div>
+<div style="text-align:center;margin-top:12px;font-size:12px;color:#6b7280">
+参选人注册 → materials(材料) → candidates(入池) → candidate_reviews(初审/联审/考察) → 选举日 → 归档
+</div>
+</div>
+
+<!-- 五大封地 -->
+<div class="fiefs">
+
+<!-- 封地1：归属地与权限 -->
+<div class="fief">
+<div class="fief-header" style="background:linear-gradient(135deg,#2c3e50,#34495e)">
+🏛️ 封地一：归属地与权限 <span class="role">领主：platform_admin</span>
+</div>
+<div class="fief-body">
+<div class="fief-section">
+<div class="fief-section-title">管辖表（7）</div>
+<div class="tbl-chips">
+<span class="chip pk">organizations</span>
+<span class="chip">users</span>
+<span class="chip">memberships</span>
+<span class="chip">roles</span>
+<span class="chip">role_permissions</span>
+<span class="chip">sessions</span>
+<span class="chip">invitations</span>
+</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">商贸出参（供应什么）</div>
+<div class="trade"><span class="dir">→</span> organization_id 给所有业务表做归属地隔离</div>
+<div class="trade"><span class="dir">→</span> user_id + role 给所有操作做鉴权</div>
+<div class="trade"><span class="dir">→</span> session token 给API请求做认证</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">商贸入参（需要什么）</div>
+<div class="trade"><span class="rev">←</span> 超管创建归属地、开账号、分配角色</div>
+<div class="trade"><span class="rev">←</span> 小程序用户注册（自动创建user+candidate membership）</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">关键字段流转</div>
+<div class="field-list">memberships.role → 后端roleGuard鉴权 → 前端菜单过滤<br>organizations.org_type → pipeline选村/社区模板<br>users.phone → 登录账号（全局唯一，绑死归属地）</div>
+</div>
+</div>
+</div>
+
+<!-- 封地2：选举活动 -->
+<div class="fief">
+<div class="fief-header" style="background:linear-gradient(135deg,#2980b9,#3498db)">
+🗳️ 封地二：选举活动 <span class="role">领主：sub_admin + editor</span>
+</div>
+<div class="fief-body">
+<div class="fief-section">
+<div class="fief-section-title">管辖表（6）</div>
+<div class="tbl-chips">
+<span class="chip pk">election_proposals</span>
+<span class="chip">election_fiefs</span>
+<span class="chip">election_fief_stages</span>
+<span class="chip">stage_templates</span>
+<span class="chip">election_terms</span>
+<span class="chip">election_units</span>
+</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">商贸出参（供应什么）</div>
+<div class="trade"><span class="dir">→</span> election_fief_id 给岗位/候选人/材料/公告做活动关联</div>
+<div class="trade"><span class="dir">→</span> d_day 给pipeline倒排所有日期</div>
+<div class="trade"><span class="dir">→</span> stages 给活动详情页时间轴 + 公告阶段关联</div>
+<div class="trade"><span class="dir">→</span> positions 给候选人报名 + 审核日期</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">商贸入参（需要什么）</div>
+<div class="trade"><span class="rev">←</span> editor提交提案(name/d_day/positions/jsonb)</div>
+<div class="trade"><span class="rev">←</span> reviewer审核提案(approved/rejected)</div>
+<div class="trade"><span class="rev">←</span> stage_templates提供倒排规则（村/社区两套）</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">关键字段流转</div>
+<div class="field-list">proposals.d_day → pipeline → stages.start/end_date<br>proposals.positions(jsonb) → pipeline → positions表<br>proposals.status=approved → 触发pipeline生成fief+stages+positions+announcements<br>stages.stage_key → announcements.stage_key 关联</div>
+</div>
+</div>
+</div>
+
+<!-- 封地3：岗位与候选人 -->
+<div class="fief">
+<div class="fief-header" style="background:linear-gradient(135deg,#27ae60,#2ecc71)">
+👥 封地三：岗位与候选人 <span class="role">领主：reviewer + candidate</span>
+</div>
+<div class="fief-body">
+<div class="fief-section">
+<div class="fief-section-title">管辖表（5）</div>
+<div class="tbl-chips">
+<span class="chip pk">positions</span>
+<span class="chip">candidates</span>
+<span class="chip">candidate_reviews</span>
+<span class="chip">materials</span>
+<span class="chip">material_files</span>
+</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">商贸出参（供应什么）</div>
+<div class="trade"><span class="dir">→</span> candidates列表给候选人管理页</div>
+<div class="trade"><span class="dir">→</span> candidate_reviews给审核历史追溯 + 小程序结果展示</div>
+<div class="trade"><span class="dir">→</span> materials+material_files给审核弹窗附件预览</div>
+<div class="trade"><span class="dir">→</span> positions.application_end/material_review_end给审核截止日期</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">商贸入参（需要什么）</div>
+<div class="trade"><span class="rev">←</span> candidate小程序提交材料(title/description/files)</div>
+<div class="trade"><span class="rev">←</span> reviewer审核(decision=approved/rejected, note=驳回意见)</div>
+<div class="trade"><span class="rev">←</span> positions由pipeline从提案生成（不手动建）</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">关键字段流转</div>
+<div class="field-list">materials.id → candidates.material_id<br>material_files.material_id → 材料附件列表（多个！）<br>candidates.current_round → preliminary/joint/inspection<br>candidate_reviews.round+decision+note → 小程序个人中心展示<br>positions.material_review_end → 审核截止日期标记</div>
+</div>
+</div>
+</div>
+
+<!-- 封地4：公告 -->
+<div class="fief">
+<div class="fief-header" style="background:linear-gradient(135deg,#8e44ad,#9b59b6)">
+📢 封地四：公告 <span class="role">领主：editor</span>
+</div>
+<div class="fief-body">
+<div class="fief-section">
+<div class="fief-section-title">管辖表（2）</div>
+<div class="tbl-chips">
+<span class="chip pk">announcements</span>
+<span class="chip">announcement_templates</span>
+</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">商贸出参（供应什么）</div>
+<div class="trade"><span class="dir">→</span> published公告给小程序前端展示</div>
+<div class="trade"><span class="dir">→</span> draft公告给小编工作台编辑</div>
+<div class="trade"><span class="dir">→</span> 公告附件(business_files)给小程序下载</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">商贸入参（需要什么）</div>
+<div class="trade"><span class="rev">←</span> pipeline根据stage_key+template_id自动生成draft</div>
+<div class="trade"><span class="rev">←</span> editor编辑(title/body/落款/成文日期)</div>
+<div class="trade"><span class="rev">←</span> editor发布(status=published, published_by/at)</div>
+<div class="trade"><span class="rev">←</span> announcement_templates提供18套甲方模板原文</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">关键字段流转</div>
+<div class="field-list">templates.at_content(含占位符) → pipeline填充 → announcements.body<br>announcements.stage_key → stages.stage_key 关联阶段<br>announcements.status=draft/published → 小编工作台状态<br>business_files(ref_type=announcement) → 公告附件</div>
+</div>
+</div>
+</div>
+
+<!-- 封地5：附件与通知 -->
+<div class="fief">
+<div class="fief-header" style="background:linear-gradient(135deg,#e67e22,#f39c12)">
+📎 封地五：附件与通知 <span class="role">领主：sub_admin</span>
+</div>
+<div class="fief-body">
+<div class="fief-section">
+<div class="fief-section-title">管辖表（2）</div>
+<div class="tbl-chips">
+<span class="chip pk">business_files</span>
+<span class="chip">webhook_subscriptions</span>
+</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">商贸出参（供应什么）</div>
+<div class="trade"><span class="dir">→</span> /files/:key 匿名下载接口（32hex不可猜）</div>
+<div class="trade"><span class="dir">→</span> webhook推送给企业微信/飞书群</div>
+<div class="trade"><span class="dir">→</span> 通用附件给公告/岗位/提案复用</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">商贸入参（需要什么）</div>
+<div class="trade"><span class="rev">←</span> 所有模块上传文件(/files/upload → storage_key)</div>
+<div class="trade"><span class="rev">←</span> sub_admin配置webhook(channel/url/mobile)</div>
+<div class="trade"><span class="rev">←</span> 定时任务触发提醒(到点推送)</div>
+</div>
+<div class="fief-section">
+<div class="fief-section-title">关键字段流转</div>
+<div class="field-list">business_files.ref_type+ref_id →  polymorphic关联<br>storage_key → /files/:key 下载路径<br>webhook_subscriptions.url → 推送目标<br>uploads目录按归属地/届/来源类型归档</div>
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="footer">
+<strong>封地治理原则：</strong>每个封地有唯一职责，不重复造轮子。商贸线路清晰：出参=供应什么，入参=需要什么。<br>
+<strong>字段不悬空：</strong>每个字段都落在某个封地手上，在商贸线路上有明确的生产→消费路径。找不到消费者的字段=待清理或待实现。<br>
+<strong>填空题：</strong>每个封地领主要回答——我管辖的字段，在前端哪个页面用？在后端哪个接口读写？在商贸线路上从哪来、到哪去？
+</div>
+
+</body>
+</html>

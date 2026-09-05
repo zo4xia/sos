@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>村居换届系统 · 数据库字段大表与说明皇榜</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f4ef;color:#1a1b1c;padding:24px;line-height:1.6}
+h1{font-size:22px;font-weight:700;margin-bottom:6px;color:#1a1b1c}
+.sub{color:#6b7280;font-size:13px;margin-bottom:24px}
+.sector{margin-bottom:32px}
+.sector-title{font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,#3b5998,#5b7bb8);padding:10px 16px;border-radius:8px 8px 0 0;display:flex;align-items:center;gap:8px}
+.sector-title .count{font-size:12px;font-weight:400;opacity:.85}
+.tables{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:12px;background:#e8e6df;padding:12px;border-radius:0 0 8px 8px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+caption{font-size:14px;font-weight:700;padding:8px 12px;background:#f0efe9;text-align:left;border-bottom:1px solid #e4e3dd;color:#1a1b1c}
+caption .tbl-desc{font-weight:400;font-size:11px;color:#6b7280;margin-left:8px}
+th{font-size:11px;font-weight:600;color:#6b7280;text-align:left;padding:6px 10px;background:#faf9f5;border-bottom:1px solid #e4e3dd}
+td{font-size:12px;padding:5px 10px;border-bottom:1px solid #f0efe9;vertical-align:top}
+td.field{font-family:Consolas,monospace;font-weight:600;color:#3b5998;white-space:nowrap}
+td.type{font-family:Consolas,monospace;font-size:11px;color:#8b5cf6}
+td.null{text-align:center;font-size:11px}
+td.desc{color:#4b5563;font-size:11.5px}
+.pk{color:#ea6668;font-weight:700}
+.fk{color:#52c41a;font-size:10px}
+.legend{display:flex;gap:16px;font-size:12px;color:#6b7280;margin-bottom:16px;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:4px}
+.footer{margin-top:32px;padding:16px;background:#fff;border-radius:8px;font-size:12px;color:#6b7280;border-left:4px solid #3b5998}
+</style>
+</head>
+<body>
+
+<h1>村居换届选举政务系统 · 数据库字段大表与说明皇榜</h1>
+<div class="sub">本地 PostgreSQL · backend_new · 22张表 · 以代码实际schema为准 · 2026-09-04</div>
+
+<div class="legend">
+<span><span class="pk">●</span> 主键</span>
+<span><span class="fk">🔗</span> 外键关联</span>
+<span>NO = 非空</span>
+<span>YES = 可空</span>
+</div>
+
+<!-- ═══════════ 板块一：归属地与权限 ═══════════ -->
+<div class="sector">
+<div class="sector-title">🏛️ 板块一：归属地与权限 <span class="count">7张表 · 组织/用户/角色/会话</span></div>
+<div class="tables">
+
+<table>
+<caption>organizations <span class="tbl-desc">归属地（村/社区）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">归属地唯一ID</td></tr>
+<tr><td class="field">slug</td><td class="type">text</td><td class="null">NO</td><td class="desc">URL标识，如 demo-village</td></tr>
+<tr><td class="field">name</td><td class="type">text</td><td class="null">NO</td><td class="desc">归属地名称，如"演示村"</td></tr>
+<tr><td class="field">org_type</td><td class="type">text</td><td class="null">NO</td><td class="desc">village=村 / community=社区（日程模板不同）</td></tr>
+<tr><td class="field">status</td><td class="type">text</td><td class="null">NO</td><td class="desc">active/inactive</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">创建时间</td></tr>
+</table>
+
+<table>
+<caption>users <span class="tbl-desc">用户（后台账号+小程序参选人均在此）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">用户唯一ID</td></tr>
+<tr><td class="field">phone</td><td class="type">text</td><td class="null">NO</td><td class="desc">手机号（登录账号，全局唯一）</td></tr>
+<tr><td class="field">password_hash</td><td class="type">text</td><td class="null">NO</td><td class="desc">密码哈希（bcrypt）</td></tr>
+<tr><td class="field">display_name</td><td class="type">text</td><td class="null">YES</td><td class="desc">显示姓名</td></tr>
+<tr><td class="field">status</td><td class="type">text</td><td class="null">NO</td><td class="desc">active/disabled</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">注册时间</td></tr>
+</table>
+
+<table>
+<caption>memberships <span class="tbl-desc">用户-归属地-角色关系（核心权限表）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">关系ID</td></tr>
+<tr><td class="field fk">user_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 users.id</td></tr>
+<tr><td class="field fk">organization_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 organizations.id（绑死归属地）</td></tr>
+<tr><td class="field">role</td><td class="type">text</td><td class="null">NO</td><td class="desc">platform_admin/sub_admin/editor/reviewer/candidate</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">授权时间</td></tr>
+</table>
+
+<table>
+<caption>roles <span class="tbl-desc">角色定义</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">key</td><td class="type">text</td><td class="null">NO</td><td class="desc">角色标识</td></tr>
+<tr><td class="field">name</td><td class="type">text</td><td class="null">NO</td><td class="desc">角色中文名</td></tr>
+<tr><td class="field">is_staff</td><td class="type">boolean</td><td class="null">NO</td><td class="desc">是否后台人员</td></tr>
+<tr><td class="field">is_system</td><td class="type">boolean</td><td class="null">NO</td><td class="desc">是否系统内置（不可删）</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">创建时间</td></tr>
+</table>
+
+<table>
+<caption>role_permissions <span class="tbl-desc">角色-权限点映射</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">role_key</td><td class="type">text</td><td class="null">NO</td><td class="desc">🔗 roles.key</td></tr>
+<tr><td class="field pk">permission</td><td class="type">text</td><td class="null">NO</td><td class="desc">权限点标识，如 proposal:review</td></tr>
+<tr><td class="field">description</td><td class="type">text</td><td class="null">YES</td><td class="desc">权限说明</td></tr>
+</table>
+
+<table>
+<caption>sessions <span class="tbl-desc">登录会话</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">会话ID</td></tr>
+<tr><td class="field fk">user_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 users.id</td></tr>
+<tr><td class="field fk">organization_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 organizations.id（登录时选定的归属地）</td></tr>
+<tr><td class="field">token_hash</td><td class="type">text</td><td class="null">NO</td><td class="desc">JWT token哈希</td></tr>
+<tr><td class="field">expires_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">过期时间</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">登录时间</td></tr>
+</table>
+
+<table>
+<caption>invitations <span class="tbl-desc">后台账号邀请（超管开账号用）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">邀请ID</td></tr>
+<tr><td class="field fk">organization_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 organizations.id</td></tr>
+<tr><td class="field">phone</td><td class="type">text</td><td class="null">NO</td><td class="desc">被邀请人手机号</td></tr>
+<tr><td class="field">role</td><td class="type">text</td><td class="null">NO</td><td class="desc">分配角色</td></tr>
+<tr><td class="field">token_hash</td><td class="type">text</td><td class="null">NO</td><td class="desc">邀请码哈希</td></tr>
+<tr><td class="field">expires_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">过期时间</td></tr>
+<tr><td class="field fk">invited_by</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 users.id（邀请人）</td></tr>
+<tr><td class="field">accepted_at</td><td class="type">timestamptz</td><td class="null">YES</td><td class="desc">接受时间（空=未接受）</td></tr>
+</table>
+
+</div>
+</div>
+
+<!-- ═══════════ 板块二：选举活动 ═══════════ -->
+<div class="sector">
+<div class="sector-title">🗳️ 板块二：选举活动 <span class="count">6张表 · 届次/提案/封地/阶段/模板</span></div>
+<div class="tables">
+
+<table>
+<caption>election_terms <span class="tbl-desc">选举届次</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">届次ID</td></tr>
+<tr><td class="field">name</td><td class="type">text</td><td class="null">NO</td><td class="desc">届次名称，如"2027年换届"</td></tr>
+<tr><td class="field">status</td><td class="type">text</td><td class="null">NO</td><td class="desc">active/archived</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">创建时间</td></tr>
+</table>
+
+<table>
+<caption>election_units <span class="tbl-desc">选举单位（村/社区下的选区）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">单位ID</td></tr>
+<tr><td class="field fk">organization_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 organizations.id</td></tr>
+<tr><td class="field">name</td><td class="type">text</td><td class="null">NO</td><td class="desc">单位名称，如"第一选区"</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">创建时间</td></tr>
+</table>
+
+<table>
+<caption>election_proposals <span class="tbl-desc">选举提案（审批通过→自动生成封地+阶段+岗位+公告）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">提案ID</td></tr>
+<tr><td class="field fk">organization_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 organizations.id（注意：无election_fief_id）</td></tr>
+<tr><td class="field fk">term_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 election_terms.id</td></tr>
+<tr><td class="field fk">unit_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 election_units.id</td></tr>
+<tr><td class="field">name</td><td class="type">text</td><td class="null">NO</td><td class="desc">提案名称</td></tr>
+<tr><td class="field">d_day</td><td class="type">date</td><td class="null">NO</td><td class="desc">正式选举日（D日，pipeline倒排基准）</td></tr>
+<tr><td class="field">org_type</td><td class="type">text</td><td class="null">NO</td><td class="desc">village/community（决定用哪套阶段模板）</td></tr>
+<tr><td class="field">positions</td><td class="type">jsonb</td><td class="null">NO</td><td class="desc">岗位数组[{name,quota}]（审批通过→写入positions表）</td></tr>
+<tr><td class="field">status</td><td class="type">text</td><td class="null">NO</td><td class="desc">pending/approved/rejected</td></tr>
+<tr><td class="field fk">proposed_by</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 users.id（提交人）</td></tr>
+<tr><td class="field fk">reviewed_by</td><td class="type">uuid</td><td class="null">YES</td><td class="desc">🔗 users.id（审核人）</td></tr>
+<tr><td class="field">reviewed_at</td><td class="type">timestamptz</td><td class="null">YES</td><td class="desc">审核时间</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">创建时间</td></tr>
+</table>
+
+<table>
+<caption>election_fiefs <span class="tbl-desc">选举封地（=一届选举活动实例，提案审批通过后生成）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">封地ID（活动ID）</td></tr>
+<tr><td class="field fk">election_term_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 election_terms.id</td></tr>
+<tr><td class="field fk">organization_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 organizations.id</td></tr>
+<tr><td class="field fk">unit_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 election_units.id</td></tr>
+<tr><td class="field">name</td><td class="type">text</td><td class="null">NO</td><td class="desc">活动名称</td></tr>
+<tr><td class="field">d_day</td><td class="type">date</td><td class="null">NO</td><td class="desc">正式选举日</td></tr>
+<tr><td class="field">timezone</td><td class="type">text</td><td class="null">NO</td><td class="desc">时区，如 Asia/Shanghai</td></tr>
+<tr><td class="field">status</td><td class="type">text</td><td class="null">NO</td><td class="desc">preparing/active/completed/archived</td></tr>
+<tr><td class="field">version</td><td class="type">integer</td><td class="null">NO</td><td class="desc">版本号（pipeline重跑时递增）</td></tr>
+<tr><td class="field fk">created_by</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 users.id</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">创建时间</td></tr>
+</table>
+
+<table>
+<caption>election_fief_stages <span class="tbl-desc">封地阶段（pipeline根据D日+模板自动生成的日程表）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">阶段ID</td></tr>
+<tr><td class="field fk">election_fief_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 election_fiefs.id</td></tr>
+<tr><td class="field fk">stage_template_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 stage_templates.id</td></tr>
+<tr><td class="field">stage_key</td><td class="type">text</td><td class="null">NO</td><td class="desc">阶段标识，如 prep/elect_committee/nominate_start</td></tr>
+<tr><td class="field">stage_name</td><td class="type">text</td><td class="null">NO</td><td class="desc">阶段名称，如"前期筹备"</td></tr>
+<tr><td class="field">start_date</td><td class="type">date</td><td class="null">NO</td><td class="desc">阶段开始日期（D日倒排计算）</td></tr>
+<tr><td class="field">end_date</td><td class="type">date</td><td class="null">NO</td><td class="desc">阶段结束日期</td></tr>
+<tr><td class="field">stage_order</td><td class="type">integer</td><td class="null">NO</td><td class="desc">排序号</td></tr>
+<tr><td class="field">status</td><td class="type">text</td><td class="null">NO</td><td class="desc">pending/active/completed</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">创建时间</td></tr>
+</table>
+
+<table>
+<caption>stage_templates <span class="tbl-desc">阶段模板（村/社区两套，pipeline倒排的规则源）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">模板ID</td></tr>
+<tr><td class="field">st_key</td><td class="type">text</td><td class="null">NO</td><td class="desc">阶段标识</td></tr>
+<tr><td class="field">st_name</td><td class="type">text</td><td class="null">NO</td><td class="desc">阶段名称</td></tr>
+<tr><td class="field">st_day_offset</td><td class="type">integer</td><td class="null">NO</td><td class="desc">距D日的天数偏移（负数=D日前）</td></tr>
+<tr><td class="field">st_duration_days</td><td class="type">integer</td><td class="null">NO</td><td class="desc">阶段持续天数</td></tr>
+<tr><td class="field">st_order</td><td class="type">integer</td><td class="null">NO</td><td class="desc">排序</td></tr>
+<tr><td class="field">st_description</td><td class="type">text</td><td class="null">YES</td><td class="desc">阶段核心工作描述</td></tr>
+<tr><td class="field">org_type</td><td class="type">text</td><td class="null">NO</td><td class="desc">village/community（村和社区日程不同）</td></tr>
+<tr><td class="field">source_label</td><td class="type">text</td><td class="null">NO</td><td class="desc">来源标识</td></tr>
+<tr><td class="field">active</td><td class="type">boolean</td><td class="null">NO</td><td class="desc">是否启用</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">创建时间</td></tr>
+<tr><td class="field">updated_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">更新时间</td></tr>
+</table>
+
+</div>
+</div>
+
+<!-- ═══════════ 板块三：岗位与候选人 ═══════════ -->
+<div class="sector">
+<div class="sector-title">👥 板块三：岗位与候选人 <span class="count">5张表 · 岗位/候选人/审核/材料</span></div>
+<div class="tables">
+
+<table>
+<caption>positions <span class="tbl-desc">竞选岗位（提案审批通过→从proposals.positions生成）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">岗位ID</td></tr>
+<tr><td class="field fk">election_fief_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 election_fiefs.id</td></tr>
+<tr><td class="field">name</td><td class="type">text</td><td class="null">NO</td><td class="desc">岗位名称，如"村委会主任"</td></tr>
+<tr><td class="field">quota</td><td class="type">integer</td><td class="null">NO</td><td class="desc">职数（应选人数）</td></tr>
+<tr><td class="field">application_start</td><td class="type">date</td><td class="null">NO</td><td class="desc">报名开始日期（pipeline计算）</td></tr>
+<tr><td class="field">application_end</td><td class="type">date</td><td class="null">NO</td><td class="desc">报名截止日期</td></tr>
+<tr><td class="field">material_review_start</td><td class="type">date</td><td class="null">NO</td><td class="desc">材料审核开始日期</td></tr>
+<tr><td class="field">material_review_end</td><td class="type">date</td><td class="null">NO</td><td class="desc">材料审核截止日期（审核人员必须在此日前完成）</td></tr>
+<tr><td class="field">status</td><td class="type">text</td><td class="null">NO</td><td class="desc">open/closed</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">创建时间</td></tr>
+</table>
+
+<table>
+<caption>candidates <span class="tbl-desc">候选人（小程序注册参选→提交材料→审核通过后入池）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">候选人ID</td></tr>
+<tr><td class="field fk">election_fief_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 election_fiefs.id</td></tr>
+<tr><td class="field fk">user_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 users.id（参选用户）</td></tr>
+<tr><td class="field fk">material_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 materials.id（参选材料）</td></tr>
+<tr><td class="field">status</td><td class="type">text</td><td class="null">NO</td><td class="desc">pending/reviewing/approved/rejected</td></tr>
+<tr><td class="field">current_round</td><td class="type">text</td><td class="null">NO</td><td class="desc">当前审核轮次：preliminary/joint/inspection（初审/联审/考察）</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">参选时间</td></tr>
+</table>
+
+<table>
+<caption>candidate_reviews <span class="tbl-desc">候选人审核记录（每轮审核一条，可追溯）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">审核记录ID</td></tr>
+<tr><td class="field fk">candidate_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 candidates.id</td></tr>
+<tr><td class="field">round</td><td class="type">text</td><td class="null">NO</td><td class="desc">审核轮次：preliminary/joint/inspection</td></tr>
+<tr><td class="field fk">reviewer_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 users.id（审核人）</td></tr>
+<tr><td class="field">decision</td><td class="type">text</td><td class="null">NO</td><td class="desc">approved/rejected（通过/驳回）</td></tr>
+<tr><td class="field">note</td><td class="type">text</td><td class="null">YES</td><td class="desc">审核意见（驳回时必填，小程序用户可见）</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">审核时间</td></tr>
+</table>
+
+<table>
+<caption>materials <span class="tbl-desc">参选材料（候选人提交，含多个附件）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">材料ID</td></tr>
+<tr><td class="field fk">election_fief_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 election_fiefs.id</td></tr>
+<tr><td class="field fk">candidate_user_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 users.id（提交人）</td></tr>
+<tr><td class="field">title</td><td class="type">text</td><td class="null">NO</td><td class="desc">材料标题</td></tr>
+<tr><td class="field">description</td><td class="type">text</td><td class="null">YES</td><td class="desc">材料说明</td></tr>
+<tr><td class="field">status</td><td class="type">text</td><td class="null">NO</td><td class="desc">submitted/approved/rejected</td></tr>
+<tr><td class="field">submitted_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">提交时间</td></tr>
+<tr><td class="field">reviewed_at</td><td class="type">timestamptz</td><td class="null">YES</td><td class="desc">审核时间</td></tr>
+<tr><td class="field fk">reviewed_by</td><td class="type">uuid</td><td class="null">YES</td><td class="desc">🔗 users.id（审核人）</td></tr>
+<tr><td class="field">review_note</td><td class="type">text</td><td class="null">YES</td><td class="desc">审核意见</td></tr>
+</table>
+
+<table>
+<caption>material_files <span class="tbl-desc">材料附件（一份材料可含多个文件）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">附件ID</td></tr>
+<tr><td class="field fk">material_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 materials.id</td></tr>
+<tr><td class="field">file_name</td><td class="type">text</td><td class="null">NO</td><td class="desc">原始文件名</td></tr>
+<tr><td class="field">mime_type</td><td class="type">text</td><td class="null">YES</td><td class="desc">MIME类型</td></tr>
+<tr><td class="field">size_bytes</td><td class="type">bigint</td><td class="null">YES</td><td class="desc">文件大小</td></tr>
+<tr><td class="field">storage_key</td><td class="type">text</td><td class="null">YES</td><td class="desc">存储key（/files/:key 下载）</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">上传时间</td></tr>
+</table>
+
+</div>
+</div>
+
+<!-- ═══════════ 板块四：公告 ═══════════ -->
+<div class="sector">
+<div class="sector-title">📢 板块四：公告 <span class="count">2张表 · 模板/公告</span></div>
+<div class="tables">
+
+<table>
+<caption>announcement_templates <span class="tbl-desc">公告模板（甲方DOCX的18套模板，pipeline自动生成公告的内容源）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">模板ID</td></tr>
+<tr><td class="field">at_code</td><td class="type">text</td><td class="null">NO</td><td class="desc">模板编号，如"1""2"（对应甲方1-18号公告）</td></tr>
+<tr><td class="field">at_name</td><td class="type">text</td><td class="null">NO</td><td class="desc">模板名称</td></tr>
+<tr><td class="field">at_version</td><td class="type">text</td><td class="null">NO</td><td class="desc">版本号</td></tr>
+<tr><td class="field">at_content</td><td class="type">text</td><td class="null">NO</td><td class="desc">模板正文（含______占位符，发布时自动填充）</td></tr>
+<tr><td class="field">at_need_remind</td><td class="type">boolean</td><td class="null">NO</td><td class="desc">是否需要定时提醒</td></tr>
+<tr><td class="field">at_note</td><td class="type">text</td><td class="null">YES</td><td class="desc">备注</td></tr>
+<tr><td class="field">source_label</td><td class="type">text</td><td class="null">NO</td><td class="desc">来源（甲方DOCX/自定义）</td></tr>
+<tr><td class="field">active</td><td class="type">boolean</td><td class="null">NO</td><td class="desc">是否启用</td></tr>
+<tr><td class="field">at_sched_offset</td><td class="type">integer</td><td class="null">YES</td><td class="desc">定时发布偏移（小时）</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">创建时间</td></tr>
+<tr><td class="field">updated_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">更新时间</td></tr>
+</table>
+
+<table>
+<caption>announcements <span class="tbl-desc">公告（pipeline自动生成草稿，小编编辑后发布）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">公告ID</td></tr>
+<tr><td class="field fk">election_fief_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 election_fiefs.id</td></tr>
+<tr><td class="field">title</td><td class="type">text</td><td class="null">NO</td><td class="desc">公告标题</td></tr>
+<tr><td class="field">body</td><td class="type">text</td><td class="null">NO</td><td class="desc">公告正文</td></tr>
+<tr><td class="field">status</td><td class="type">text</td><td class="null">NO</td><td class="desc">draft/published（草稿/已发布）</td></tr>
+<tr><td class="field fk">created_by</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 users.id（创建人=pipeline或小编）</td></tr>
+<tr><td class="field fk">updated_by</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 users.id（最后编辑人）</td></tr>
+<tr><td class="field fk">published_by</td><td class="type">uuid</td><td class="null">YES</td><td class="desc">🔗 users.id（发布人）</td></tr>
+<tr><td class="field">published_at</td><td class="type">timestamptz</td><td class="null">YES</td><td class="desc">发布时间</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">创建时间</td></tr>
+<tr><td class="field">updated_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">更新时间</td></tr>
+<tr><td class="field fk">template_id</td><td class="type">uuid</td><td class="null">YES</td><td class="desc">🔗 announcement_templates.id</td></tr>
+<tr><td class="field">scheduled_for</td><td class="type">date</td><td class="null">YES</td><td class="desc">定时发布日期</td></tr>
+<tr><td class="field">stage_key</td><td class="type">text</td><td class="null">YES</td><td class="desc">所属阶段标识</td></tr>
+</table>
+</table>
+
+</div>
+</div>
+
+<!-- ═══════════ 板块五：附件与通知 ═══════════ -->
+<div class="sector">
+<div class="sector-title">📎 板块五：附件与通知 <span class="count">2张表 · 业务附件/webhook</span></div>
+<div class="tables">
+
+<table>
+<caption>business_files <span class="tbl-desc">业务附件（公告/岗位/提案的通用附件表，新建）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">附件ID</td></tr>
+<tr><td class="field">ref_type</td><td class="type">varchar(20)</td><td class="null">NO</td><td class="desc">announcement/position/proposal</td></tr>
+<tr><td class="field">ref_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">关联业务ID</td></tr>
+<tr><td class="field">file_name</td><td class="type">varchar(255)</td><td class="null">NO</td><td class="desc">原始文件名</td></tr>
+<tr><td class="field">mime_type</td><td class="type">varchar(100)</td><td class="null">YES</td><td class="desc">MIME类型</td></tr>
+<tr><td class="field">size_bytes</td><td class="type">integer</td><td class="null">YES</td><td class="desc">文件大小</td></tr>
+<tr><td class="field">storage_key</td><td class="type">varchar(64)</td><td class="null">NO</td><td class="desc">存储key（/files/:key 下载）</td></tr>
+<tr><td class="field fk">created_by</td><td class="type">uuid</td><td class="null">YES</td><td class="desc">🔗 users.id</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">YES</td><td class="desc">上传时间</td></tr>
+</table>
+
+<table>
+<caption>webhook_subscriptions <span class="tbl-desc">通知订阅（企业微信/飞书群机器人推送）</span></caption>
+<tr><th>字段</th><th>类型</th><th>空</th><th>业务说明</th></tr>
+<tr><td class="field pk">id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">订阅ID</td></tr>
+<tr><td class="field fk">organization_id</td><td class="type">uuid</td><td class="null">NO</td><td class="desc">🔗 organizations.id</td></tr>
+<tr><td class="field">name</td><td class="type">text</td><td class="null">NO</td><td class="desc">订阅名称</td></tr>
+<tr><td class="field">channel</td><td class="type">text</td><td class="null">NO</td><td class="desc">wecom/feishu/generic（企业微信/飞书/通用）</td></tr>
+<tr><td class="field">url</td><td class="type">text</td><td class="null">NO</td><td class="desc">webhook URL</td></tr>
+<tr><td class="field">mobile</td><td class="type">text</td><td class="null">YES</td><td class="desc">@提醒的手机号</td></tr>
+<tr><td class="field">active</td><td class="type">boolean</td><td class="null">NO</td><td class="desc">是否启用</td></tr>
+<tr><td class="field fk">created_by</td><td class="type">uuid</td><td class="null">YES</td><td class="desc">🔗 users.id</td></tr>
+<tr><td class="field">created_at</td><td class="type">timestamptz</td><td class="null">NO</td><td class="desc">创建时间</td></tr>
+</table>
+
+</div>
+</div>
+
+<div class="footer">
+<strong>皇榜说明：</strong>本表以本地 PostgreSQL <code>backend_new</code> 实际 schema 为准（2026-09-04 导出）。数据库列注释全为空，业务说明按甲方DOCX倒排工期表+系统设计语义补全。<br>
+<strong>核心商贸线路：</strong>election_proposals(审批通过) → pipeline → election_fiefs + election_fief_stages + positions + announcements → candidates + materials + candidate_reviews → 归档。<br>
+<strong>五角色：</strong>platform_admin(超管) / sub_admin(子管理) / editor(经办编辑) / reviewer(审核人) / candidate(参选人)。后台仅超管开账号，小程序注册绑死归属地。
+</div>
+
+</body>
+</html>
