@@ -1,0 +1,24 @@
+[
+  {
+    "id": "2c5e927b-23da-4d5b-8ac2-8042ec1e318a",
+    "organization_id": "2195fbb8-f974-47cf-b637-83bd52216b23",
+    "term_id": "69d007c8-8d60-4a3f-a7bd-d82842d26222",
+    "unit_id": "29534d19-9b97-45a2-84a7-be0037dec5c5",
+    "name": "【callback验证】驳回留痕测试提案",
+    "d_day": "2026-12-25T00:00:00.000Z",
+    "org_type": "village",
+    "positions": [
+      {
+        "name": "村委会主任",
+        "quota": 1
+      }
+    ],
+    "status": "rejected",
+    "proposed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+    "reviewed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+    "reviewed_at": "2026-09-06T13:34:26.170Z",
+    "reject_reason": "UI实弹驳回：请补充联审前置材料",
+    "created_at": "2026-09-06T13:34:19.291Z",
+    "election_method": "全民直选"
+  }
+]

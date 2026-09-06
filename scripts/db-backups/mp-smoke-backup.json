@@ -1,0 +1,27 @@
+{
+  "materials": [
+    {
+      "id": "a5cd2ef0-8f64-4485-9ca0-6fd8a3228f36",
+      "election_fief_id": "df6be13c-70fc-4ded-b467-be8b074d1497",
+      "candidate_user_id": "03e82064-453c-4024-b47b-7bd07818f57d",
+      "title": "主任",
+      "description": "小程序端到端冒烟（自动清理）",
+      "status": "submitted",
+      "submitted_at": "2026-09-06T12:34:10.942Z",
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "review_note": null
+    }
+  ],
+  "material_files": [
+    {
+      "id": "4bfc8ecf-e6ed-4ee1-a27c-ec578cce7ec2",
+      "material_id": "a5cd2ef0-8f64-4485-9ca0-6fd8a3228f36",
+      "file_name": "material-test.txt",
+      "mime_type": "application/octet-stream",
+      "size_bytes": "65",
+      "storage_key": "02cd267b0d4df67d60cf4d338c8c56fc.txt",
+      "created_at": "2026-09-06T12:34:10.942Z"
+    }
+  ]
+}

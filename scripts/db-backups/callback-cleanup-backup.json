@@ -1,0 +1,168 @@
+{
+  "proposals": [
+    {
+      "id": "1da556c9-0dae-4db6-aa34-d255d271188d",
+      "organization_id": "2195fbb8-f974-47cf-b637-83bd52216b23",
+      "term_id": "69d007c8-8d60-4a3f-a7bd-d82842d26222",
+      "unit_id": "29534d19-9b97-45a2-84a7-be0037dec5c5",
+      "name": "【callback验证】驳回留痕测试提案",
+      "d_day": "2026-12-20T00:00:00.000Z",
+      "org_type": "village",
+      "positions": [
+        {
+          "name": "村委会主任",
+          "quota": 1
+        }
+      ],
+      "status": "rejected",
+      "proposed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+      "reviewed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+      "reviewed_at": "2026-09-05T22:52:35.532Z",
+      "reject_reason": "驳回批注-实弹验证：岗位职数与工作方案不符，请按第11届方案修正后重报",
+      "created_at": "2026-09-05T22:52:35.361Z",
+      "election_method": "全民直选"
+    },
+    {
+      "id": "734572df-c325-4be5-8fbb-945c9ac53a60",
+      "organization_id": "2195fbb8-f974-47cf-b637-83bd52216b23",
+      "term_id": "69d007c8-8d60-4a3f-a7bd-d82842d26222",
+      "unit_id": "29534d19-9b97-45a2-84a7-be0037dec5c5",
+      "name": "【callback验证】驳回留痕测试提案",
+      "d_day": "2026-12-25T00:00:00.000Z",
+      "org_type": "village",
+      "positions": [
+        {
+          "name": "村委会主任",
+          "quota": 1
+        }
+      ],
+      "status": "rejected",
+      "proposed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+      "reviewed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+      "reviewed_at": "2026-09-05T22:56:35.761Z",
+      "reject_reason": "UI实弹驳回：请补充联审前置材料",
+      "created_at": "2026-09-05T22:52:36.069Z",
+      "election_method": "全民直选"
+    },
+    {
+      "id": "838b8b38-2372-4158-a2cd-e514e6811df1",
+      "organization_id": "2195fbb8-f974-47cf-b637-83bd52216b23",
+      "term_id": "69d007c8-8d60-4a3f-a7bd-d82842d26222",
+      "unit_id": "29534d19-9b97-45a2-84a7-be0037dec5c5",
+      "name": "【callback验证】驳回留痕测试提案",
+      "d_day": "2026-12-25T00:00:00.000Z",
+      "org_type": "village",
+      "positions": [
+        {
+          "name": "村委会主任",
+          "quota": 1
+        }
+      ],
+      "status": "rejected",
+      "proposed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+      "reviewed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+      "reviewed_at": "2026-09-05T22:58:38.194Z",
+      "reject_reason": "UI实弹驳回：请补充联审前置材料",
+      "created_at": "2026-09-05T22:58:31.192Z",
+      "election_method": "全民直选"
+    },
+    {
+      "id": "f8e3f2ef-ddfa-48a5-8b08-b35d9d21b468",
+      "organization_id": "2195fbb8-f974-47cf-b637-83bd52216b23",
+      "term_id": "69d007c8-8d60-4a3f-a7bd-d82842d26222",
+      "unit_id": "29534d19-9b97-45a2-84a7-be0037dec5c5",
+      "name": "【callback验证】驳回留痕测试提案",
+      "d_day": "2026-12-25T00:00:00.000Z",
+      "org_type": "village",
+      "positions": [
+        {
+          "name": "村委会主任",
+          "quota": 1
+        }
+      ],
+      "status": "rejected",
+      "proposed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+      "reviewed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+      "reviewed_at": "2026-09-05T23:00:46.617Z",
+      "reject_reason": "UI实弹驳回：请补充联审前置材料",
+      "created_at": "2026-09-05T23:00:39.680Z",
+      "election_method": "全民直选"
+    },
+    {
+      "id": "5ed8166b-62b7-4c3d-8e42-c9ce9b9c043a",
+      "organization_id": "2195fbb8-f974-47cf-b637-83bd52216b23",
+      "term_id": "69d007c8-8d60-4a3f-a7bd-d82842d26222",
+      "unit_id": "29534d19-9b97-45a2-84a7-be0037dec5c5",
+      "name": "【callback验证】驳回留痕测试提案",
+      "d_day": "2026-12-25T00:00:00.000Z",
+      "org_type": "village",
+      "positions": [
+        {
+          "name": "村委会主任",
+          "quota": 1
+        }
+      ],
+      "status": "rejected",
+      "proposed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+      "reviewed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+      "reviewed_at": "2026-09-05T23:02:31.543Z",
+      "reject_reason": "UI实弹驳回：请补充联审前置材料",
+      "created_at": "2026-09-05T23:02:24.441Z",
+      "election_method": "全民直选"
+    }
+  ],
+  "users": [
+    {
+      "id": "19f976c5-a158-4623-b7ce-f75257543317",
+      "phone": "13900006095",
+      "display_name": "callback测试账号",
+      "role": "editor"
+    }
+  ],
+  "materials": [
+    {
+      "id": "a6d06f61-6fc1-46f4-9e8c-07343aec5aa9",
+      "election_fief_id": "df6be13c-70fc-4ded-b467-be8b074d1497",
+      "candidate_user_id": "519b81fc-3997-40e6-a6f2-6e27b18a40cd",
+      "title": "组织推荐-callback回归验证",
+      "description": "实弹验证材料录入链路",
+      "status": "approved",
+      "submitted_at": "2026-09-05T22:52:36.924Z",
+      "reviewed_at": "2026-09-05T22:52:37.304Z",
+      "reviewed_by": "b07b4def-5540-4ca2-9657-94d327c39ee1",
+      "review_note": "callback 回归审核通过"
+    }
+  ],
+  "candidates_a6d06f61-6fc1-46f4-9e8c-07343aec5aa9": [
+    {
+      "id": "b056b324-a879-40b5-8716-90a4dfa1c95d",
+      "election_fief_id": "df6be13c-70fc-4ded-b467-be8b074d1497",
+      "user_id": "519b81fc-3997-40e6-a6f2-6e27b18a40cd",
+      "material_id": "a6d06f61-6fc1-46f4-9e8c-07343aec5aa9",
+      "status": "reviewing",
+      "current_round": "R1",
+      "created_at": "2026-09-05T22:52:37.345Z"
+    }
+  ],
+  "files_a6d06f61-6fc1-46f4-9e8c-07343aec5aa9": [
+    {
+      "id": "d0437538-b879-4af7-b345-c7f8e7e3e828",
+      "material_id": "a6d06f61-6fc1-46f4-9e8c-07343aec5aa9",
+      "file_name": "callback-附件.txt",
+      "mime_type": "text/plain",
+      "size_bytes": "32",
+      "storage_key": "c78564afba7b232ba2738124c4856349.txt",
+      "created_at": "2026-09-05T22:52:37.139Z"
+    }
+  ],
+  "smokeUsers": [
+    {
+      "id": "519b81fc-3997-40e6-a6f2-6e27b18a40cd",
+      "phone": "13700000077",
+      "password_hash": "scrypt:2f2c524008f325842df7eb2b1dccc165:7fb98dd44f668d16898ee5f0dc3bf171bcbfa0622492692e40fd861123efd701f8416ac339d37b62160c5344df267b77d2c7b8a21dead9fc6f42674628116729",
+      "display_name": "callback材料回归",
+      "status": "active",
+      "created_at": "2026-09-05T22:52:36.730Z"
+    }
+  ]
+}

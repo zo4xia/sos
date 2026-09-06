@@ -1,0 +1,25 @@
+[
+  {
+    "id": "43f625e5-3bf9-4d32-a035-8421c004572f",
+    "election_fief_id": "726dc2d0-b73e-4602-9e8f-41c3cf936466",
+    "title": "关于居民选举委员会名单的公告",
+    "body": "______镇(街道)______社区居民委员会关于居民选举委员会名单的公告（第2号）经本社区居民推选，产生了组织和主持本社区第十四届居民委员会换届选举工作的居民选举委员会。现将名单公布如下：主 任：__________副主任：__________委 员：__________、__________、__________特此公告______镇(街道)______社区居民委员会____年____月____日",
+    "status": "published",
+    "created_by": "840da9f7-fca8-481a-b538-e2a568ce3a8e",
+    "updated_by": "dd96d416-c2e9-403e-9ccc-0f977768fbdd",
+    "published_by": "dd96d416-c2e9-403e-9ccc-0f977768fbdd",
+    "published_at": "2026-09-06T09:16:08.378Z",
+    "created_at": "2026-09-06T09:15:15.776Z",
+    "updated_at": "2026-09-06T09:16:08.378Z",
+    "template_id": "86f80733-8d55-4c41-9eb8-e93d0d9bf75c",
+    "ann_sign": "演示社区居民选举委员会",
+    "ann_sign_date": "2026-11-12",
+    "ann_open_material_submit": false,
+    "ann_publish_mode": "immediate",
+    "ann_publish_at": null,
+    "ann_remind_hours": 24,
+    "ann_remind_to": "editor,admin",
+    "scheduled_for": "2026-11-23T00:00:00.000Z",
+    "stage_key": null
+  }
+]

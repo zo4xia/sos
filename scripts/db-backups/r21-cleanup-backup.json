@@ -1,0 +1,31 @@
+{
+  "users": [
+    {
+      "id": "bb5285e4-549f-442b-b4c8-1778afbf8b88",
+      "phone": "13911115555",
+      "password_hash": "scrypt:362deb28c6f94732460e5489f9de5735:9bd2c21d4d9140ce66eed44135421c4e8551247f003af5639465a12cc580c53d12d07c3508c3500abbd77f9f1d7d4fa15b911f54d85c8e0786d6b76e7e7acdf9",
+      "display_name": "13911115555",
+      "status": "active",
+      "created_at": "2026-09-06T12:33:05.837Z"
+    }
+  ],
+  "memberships": [
+    {
+      "id": "57aa50c5-22ec-4b87-b481-56a2552db229",
+      "user_id": "bb5285e4-549f-442b-b4c8-1778afbf8b88",
+      "organization_id": "2195fbb8-f974-47cf-b637-83bd52216b23",
+      "role": "candidate",
+      "created_at": "2026-09-06T12:33:05.837Z"
+    }
+  ],
+  "sessions": [
+    {
+      "id": "11ac4b88-6641-46b0-b9f6-968e301fc42e",
+      "user_id": "bb5285e4-549f-442b-b4c8-1778afbf8b88",
+      "organization_id": "2195fbb8-f974-47cf-b637-83bd52216b23",
+      "token_hash": "60e17997bb6c536a8dd547e95ac7e1cba6f151e8af1861bbe0d7b3a41cda0569",
+      "expires_at": "2026-09-13T12:33:06.135Z",
+      "created_at": "2026-09-06T12:33:06.135Z"
+    }
+  ]
+}
